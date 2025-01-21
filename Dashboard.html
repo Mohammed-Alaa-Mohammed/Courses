@@ -273,5 +273,392 @@ document.getElementById('courseType').addEventListener('change', function() {
 // Load courses on page load
 window.onload = loadCourses;
     </script>
+<style>
+     
+/* Here set All Styles in */
+   /* الإعدادات العامة */
+   body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    background-color: #f6f6f6;
+}
+
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* العنوان الرئيسي */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* حقل البحث وقائمة التصفية */
+#searchBar, #filterType {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+/* حقل البحث */
+#searchBar {
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#searchBar:focus  , #form{
+    border-color: #00796b;
+    box-shadow: 0 0 10px 5px rgba(0, 123, 123, 0.4);
+}
+
+/* الفلاتر */
+#filterType {
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#filterType:focus {
+    border-color: #00796b;
+}
+
+/* فلاتر الفئة */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* زر تطبيق الفلاتر */
+.filter-button {
+    padding: 12px 20px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.filter-button:hover {
+    background-color: #004d40;
+}
+
+#filterType {
+    width: 100%;
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* حقل عرض عدد الدورات */
+#courseCount {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.2rem;
+}
+
+/* نموذج إضافة/تعديل الكورس */
+.course-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.course-form input,
+.course-form textarea,
+.course-form select,
+.course-form button
+{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-color: #023047;
+    outline: none;
+}
+
+.course-form button {
+    background-color: #344C6c;
+    color: white;
+    cursor: pointer;
+    font-weight:bold;
+    font-size:17px;
+    border: none;
+    border-radius:5px;
+    height:40px;
+}
+
+.course-form button:hover {
+    background-color: #023047;
+    color:#fff;
+    font-size:17px;
+    font-style:bold;
+}
+
+/* تعديل الشكل عند عرض السعر في الكورسات المدفوعة */
+#coursePrice {
+    display: none;
+}
+
+/* قائمة الكورسات */
+.course-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.course-item {
+    background-color: #fff;
+    padding: 15px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.course-item h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.course-item p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.course-item .course-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.course-item .button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.edit-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #e60000;
+}
+
+/* Media Queries لتجاوب الصفحة */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-container {
+        padding: 15px;
+    }
+
+    .course-form input,
+    .course-form textarea,
+    .course-form select,
+    .course-form button {
+        font-size: 0.9rem;
+    }
+
+    .course-list {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .course-item {
+        width: 100%;
+        max-width: 90%;
+    }
+
+    #searchBar, #filterType {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .course-form input,
+    .course-form textarea,
+    .course-form select,
+    .course-form button {
+        font-size: 0.8rem;
+    }
+
+    .course-item {
+        max-width: 100%;
+    }
+
+    .course-item h3 {
+        font-size: 1rem;
+    }
+
+    .course-item p {
+        font-size: 0.9rem;
+    }
+
+    .course-item .course-buttons {
+        flex-direction: column;
+    }
+
+    .course-item .button {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+/* link */
+/* تنسيق رابط الكورس */
+.course-item a {
+    display: block; /* ليأخذ الرابط المساحة الكاملة المتاحة */
+    word-wrap: break-word; /* يسمح بتقسيم النص الطويل إلى عدة أسطر */
+    max-width: 100%; /* ضبط العرض ليكون بنسبة 100% من العنصر الأب */
+    overflow: hidden; /* إخفاء النص الذي يتجاوز الحد المحدد */
+    text-overflow: ellipsis; /* إظهار النقاط (...) عند الحاجة */
+    white-space: normal; /* السماح للنص بالانتقال إلى السطر التالي إذا كان طويلًا */
+    font-size: 14px; /* حجم الخط */
+    color: #0066cc; /* لون الرابط */
+    text-decoration: none; /* إزالة التسطير الافتراضي */
+    margin-top: 10px; /* إضافة هامش أعلى لتحسين المسافات */
+    padding: 5px; /* إضافة padding ليظهر الرابط بشكل مريح */
+    background-color: #f4f4f4; /* خلفية فاتحة تميز الرابط */
+    border-radius: 5px; /* إضافة زاوية مستديرة للحدود */
+    transition: background-color 0.3s ease, color 0.3s ease; /* تأثيرات انتقالية عند التفاعل */
+}
+
+/* تأثيرات التمرير على الرابط */
+.course-item a:hover {
+    background-color: #e0f7fa; /* تغيير اللون عند التمرير */
+    color: #00796b; /* تغيير لون النص عند التمرير */
+    text-decoration: underline; /* إضافة التسطير عند مرور الفأرة */
+}
+
+/* لضبط النص عند الشاشات الصغيرة */
+@media (max-width: 600px) {
+    .course-item a {
+        font-size: 12px; /* تقليل حجم الخط في الشاشات الصغيرة */
+        padding: 8px; /* زيادة padding قليلاً في الشاشات الصغيرة */
+    }
+}
+
+/* Footer */
+/* Footer */
+
+/* تنسيق الجسم */
+html, body {
+    height: 100%; /* تحديد ارتفاع الصفحة ليشمل كامل الشاشة */
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* إعداد محتوى الصفحة ليأخذ المساحة المتاحة */
+.content {
+    flex: 1; /* يجعل المحتوى يتوسع لملء المساحة المتاحة */
+    padding: 20px;
+}
+
+/* تنسيق الفوتر */
+footer {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-left:auto;
+}
+
+/* تنسيق محتوى الفوتر */
+.footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #34495e;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* تنسيق النص */
+footer p {
+    font-size: 16px;
+    margin: 0;
+    color: #ecf0f1;
+}
+
+/* نص قوي */
+footer p strong {
+    color: #f39c12;
+}
+
+/* تنسيق متجاوب */
+@media (max-width: 768px) {
+    footer {
+        padding: 30px 15px;
+    }
+    .footer-content {
+        padding: 15px;
+    }
+    footer p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    footer p {
+        font-size: 12px;
+    }
+}
+</style>
 </body>
 </html>
