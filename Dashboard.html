@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+        <!-- المطور محمد علاء محمد -->
+<meta name="theme-color" content="#2980b9"> 
+<meta property="og:site_name" content="The Code Courses ">
+<!-- تحديد اللغة الافتراضية للمحتوى (العربية في هذه الحالة) -->
+<meta property="og:locale" content="ar_AR">
+<!-- تحديد لغة بديلة: الإنجليزية (الولايات المتحدة) -->
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:image" content="https://cdn3.iconfinder.com/data/icons/education-and-learning-hexagon-2/128/6-512.png">
+<meta property="og:description" content="صحفة عرض جميع الكورسات المتاحة من تطوير : Mohammed Alaa Mohammed">
+<meta property="og:title" content=" كورسات تدريبية اونلاين V.3"> 
+<link rel="icon" href ="https://cdn3.iconfinder.com/data/icons/education-and-learning-hexagon-2/128/6-512.png">
+<link rel="stylesheet" href="dash-page.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href ="https://cdn3.iconfinder.com/data/icons/education-and-learning-hexagon-2/128/6-512.png">
+    <link rel="stylesheet" href="dash-page.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <link rel="icon" href ="https://cdn3.iconfinder.com/data/icons/education-and-learning-hexagon-2/128/6-512.png">
+    <link rel="stylesheet" href="dashboard.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Dashboard Last Versoin 3</title>
+</head>
+<body>
+
+ <div class="dashboard-container" dir="rtl">
+    
+
+    <!-- إضافة حقل البحث -->
+    <input type="text" id="searchBar" placeholder="ابحث عن دورة..." oninput="searchCourses()" />
+
+    <!-- إضافة قائمة التصفية -->
+    <select dir="rtl" id="filterType" onchange="filterCourses()">
+        <option value="all">الكل</option>
+        <option value="free">مجانية</option>
+        <option value="paid">مدفوعة</option>
+    </select>
+
+    <!-- عرض عدد الدورات -->
+     <b><p id="courseCount">إجمالي عدد الدورات : 0</p></b>
+
+    <!-- Form to add or update a course -->
+    <div class="course-form" dir="rtl" id="form">
+    
+        <input type="text" id="courseTitle" placeholder="Course Title" required style="padding:5px;"/>
+        <textarea id="courseDescription" placeholder="Course Description" required style="padding:5px;"></textarea>
+        <input type="text" id="courseInstructor" placeholder="Instructor Name" required style="padding:5px;"/>
+
+        <select id="courseType" dir="auto" style="width:100%;">
+            <option value="free">Free</option>
+            <option value="paid">Paid</option>
+        </select>
+
+        <input  type="number" id="coursePrice" placeholder="Course Price" style="display: none; padding:5px;" />
+        <input type="number" id="courseLessons" placeholder="Number of Lessons" required style="padding:5px;"/>
+        <input type="number" id="courseRegistrants" placeholder="Number of Registrants" required style="padding:5px;"/>
+
+        <!-- إضافة حقل رابط الكورس -->
+        <input type="url" id="courseLink" placeholder="Course Link" style="padding:5px;"/>
+
+
+
+        <button onclick="addOrUpdateCourse()">Add New Course To Website</button>
+    </div>
+</div>
+
+        <!-- List of courses -->
+        <div class="course-list" id="courseList" dir="rtl">
+            <!-- Courses will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-content">
+        <p>© 2024 جميع الحقوق محفوظة لموقع <strong>Code Courses</strong> للمطور <strong>محمد علاء محمد</strong></p>
+    </div>
+</footer>
+
+    <script>
+   let editingIndex = -1;
+
+// Load existing courses from localStorage
+function loadCourses() {
+    const courses = JSON.parse(localStorage.getItem('courses')) || [];
+    const courseList = document.getElementById('courseList');
+    const courseCount = document.getElementById('courseCount');
+    courseList.innerHTML = ''; // Clear existing courses
+
+    courses.forEach((course, index) => {
+        const courseItem = document.createElement('div');
+        courseItem.className = 'course-item';
+        courseItem.innerHTML = `
+            <div>
+                <h3>${course.title}</h3>
+                <p>Instructor : ${course.instructor}</p>
+        <p>Description : ${course.description}</p>
+                <p>Type : ${course.type}</p>
+                <p>Lessons : ${course.lessons}</p>
+                <p>Registrants : ${course.registrants}</p>
+                <p>Price : ${course.price ? course.price : 'Free'}</p>  <!-- عرض السعر -->
+       
+                <p>Link : <a href="${course.link}" target="_blank">${course.link}</a></p>
+        
+            </div>
+            <div class="course-buttons">
+                <button class="edit-button button" onclick="editCourse(${index})">Edit</button>
+                <button class="delete-button button" onclick="deleteCourse(${index})">Delete</button>
+            </div>
+        `;
+        courseList.appendChild(courseItem);
+    });
+
+    courseCount.textContent = `إجمالي عدد الدورات : ${courses.length}`;
+}
+
+// Filter courses
+function filterCourses() {
+    const filterType = document.getElementById('filterType').value;
+    const courses = JSON.parse(localStorage.getItem('courses')) || [];
+    let filteredCourses = [];
+
+    // Filter courses based on type
+    if (filterType === 'all') {
+        filteredCourses = courses;
+    } else {
+        filteredCourses = courses.filter(course => course.type === filterType);
+    }
+
+    // Re-load the filtered courses
+    displayCourses(filteredCourses);
+}
+
+// Search courses
+function searchCourses() {
+    const searchValue = document.getElementById('searchBar').value.toLowerCase();
+    const courses = JSON.parse(localStorage.getItem('courses')) || [];
+    const filteredCourses = courses.filter(course => 
+        course.title.toLowerCase().includes(searchValue));
+
+    displayCourses(filteredCourses);
+}
+
+// Display courses
+function displayCourses(courses) {
+    const courseList = document.getElementById('courseList');
+    const courseCount = document.getElementById('courseCount');
+    courseList.innerHTML = ''; // Clear existing courses
+
+    courses.forEach((course, index) => {
+        const courseItem = document.createElement('div');
+        courseItem.className = 'course-item';
+        courseItem.innerHTML = `
+            <div>
+                <h3>${course.title}</h3>
+                <p>Instructor : ${course.instructor}</p>
+        <p>Description : ${course.description}</p>
+                <p>Type : ${course.type}</p>
+                <p>Lessons : ${course.lessons}</p>
+                <p>Registrants : ${course.registrants}</p>
+                <p>Price : ${course.price ? course.price : 'Free'}</p>  <!-- عرض السعر -->
+        
+                <p>Link: <a href="${course.link}" target="_blank">${course.link}</a></p>
+            </div>
+            <div class="course-buttons">
+                <button class="edit-button button" onclick="editCourse(${index})">Edit</button>
+                <button class="delete-button button" onclick="deleteCourse(${index})">Delete</button>
+            </div>
+        `;
+        courseList.appendChild(courseItem);
+    });
+
+    courseCount.textContent = `إجمالي عدد الدورات: ${courses.length}`;
+}
+
+// Add or update course function
+function addOrUpdateCourse() {
+    const title = document.getElementById('courseTitle').value;
+    const description = document.getElementById('courseDescription').value;
+    const instructor = document.getElementById('courseInstructor').value;
+    const type = document.getElementById('courseType').value;
+    const price = document.getElementById('coursePrice').value;
+    const lessons = document.getElementById('courseLessons').value;
+    const registrants = document.getElementById('courseRegistrants').value;
+    const link = document.getElementById('courseLink').value; // رابط الكورس
+
+    if (title && description && instructor && lessons && registrants) {
+        const course = {
+            title,
+            description,
+            instructor,
+            type,
+            price: price || (type === 'paid' ? null : 'Free'),  // تعيين السعر كـ "مجاني" إذا كان فارغًا
+            lessons,
+            registrants,
+            link // إضافة الرابط
+        };
+
+        const courses = JSON.parse(localStorage.getItem('courses')) || [];
+
+        if (editingIndex !== -1) {
+            // Update existing course
+            courses[editingIndex] = course;
+            editingIndex = -1;
+            alert("Course updated successfully!");
+        } else {
+            // Add new course
+            courses.push(course);
+            alert("Course added successfully!");
+        }
+
+        // Save updated courses to localStorage
+        localStorage.setItem('courses', JSON.stringify(courses));
+
+        // Reset form
+        resetForm();
+        loadCourses();
+    }
+}
+
+// Edit course function
+function editCourse(index) {
+    const courses = JSON.parse(localStorage.getItem('courses'));
+    const course = courses[index];
+
+    document.getElementById('courseTitle').value = course.title;
+    document.getElementById('courseDescription').value = course.description;
+    document.getElementById('courseInstructor').value = course.instructor;
+    document.getElementById('courseType').value = course.type;
+    document.getElementById('coursePrice').value = course.price || '';
+    document.getElementById('courseLessons').value = course.lessons;
+    document.getElementById('courseRegistrants').value = course.registrants;
+    document.getElementById('courseLink').value = course.link; // تعيين الرابط
+
+    editingIndex = index; // Set editing mode
+    document.getElementById('formTitle').textContent = 'Edit Course';
+}
+
+// Delete course function
+function deleteCourse(index) {
+    const courses = JSON.parse(localStorage.getItem('courses'));
+    courses.splice(index, 1); // Remove course from array
+
+    // Save updated courses to localStorage
+    localStorage.setItem('courses', JSON.stringify(courses));
+    loadCourses();
+}
+
+// Reset form
+function resetForm() {
+    document.getElementById('courseTitle').value = '';
+    document.getElementById('courseDescription').value = '';
+    document.getElementById('courseInstructor').value = '';
+    document.getElementById('coursePrice').value = '';
+    document.getElementById('courseLessons').value = '';
+    document.getElementById('courseRegistrants').value = '';
+    document.getElementById('courseLink').value = ''; // مسح الرابط
+    document.getElementById('formTitle').textContent = 'Add a New Course';
+}
+
+// Show price field when the course type is paid
+document.getElementById('courseType').addEventListener('change', function() {
+    const priceField = document.getElementById('coursePrice');
+    if (this.value === 'paid') {
+        priceField.style.display = 'inline-block';
+    } else {
+        priceField.style.display = 'none';
+    }
+});
+
+// Load courses on page load
+window.onload = loadCourses;
+    </script>
+</body>
+</html>
