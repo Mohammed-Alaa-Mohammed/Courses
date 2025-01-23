@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+  
+
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faster.com</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJX3Z0RnXJDFs+7jWsf9+T1XEK9AXofNY8UBl4BeVbb06Fxf6TgcfuXtMszI" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin-top: 50px;
+            transition: background-color 0.3s ease;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            font-weight:bold;
+            margin: 0 auto;
+        }
+
+        .icon {
+            font-size: 35px;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .btn-3d {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            box-shadow: 0 6px #999;
+            transition: all 0.3s ease;
+            
+        }
+
+        .btn-3d:hover {
+            background-color: #0056b3;
+            box-shadow: 0 8px #666;
+            transform: translateY(-4px);
+        }
+
+        .btn-3d:active {
+            background-color: #004080;
+            box-shadow: 0 2px #666;
+            transform: translateY(2px);
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-mode .container {
+            background-color: #1c1c1c;
+        }
+
+        .alert-custom {
+            margin-top: 20px;
+        }
+
+        #test-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #007BFF;
+        }
+
+        .result {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .separator {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* تنسيق قائمة الخوادم */
+        #serverSelect {
+            width: 100%;
+            max-width: 250px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1.5px solid #ccc;
+            transition: border-color 0.3s ease;
+            font-style:bold;
+            font-weight:bold;
+            outline:none;
+            box-shadow: 1px -1px 400px #F4F4F2;
+            border-color:#904;
+            background-color:#FFF;
+            color:#212224;
+        }
+
+        #serverSelect:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            border-radius:5px;
+            font-style:bold;
+        }
+
+        #serverSelect option {
+            font-size: 16px;
+        }
+
+        /* تنسيق زر تبديل الوضع */
+        .btn-secondary {
+            background-color: #BF230C;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-left:8px;
+            font-size: 14px;
+            border: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            font-weight:bold;
+           
+        }
+
+        .btn-secondary:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary:active {
+            background-color: #1e7e34;
+            transform: translateY(2px);
+        }
+
+        /* تنسيق الأقسام */
+        .server-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .server-section button {
+            background-color: #33A853;
+            color: white;
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-size: 14px;
+            border: none;
+            font-weight:bold;
+            transition: all 0.3s ease;
+        }
+
+        .server-section button:hover {
+            background-color: #e68900;
+            transform: translateY(-2px);
+        }
+
+        .server-section button:active {
+            background-color: #d17e00;
+            transform: translateY(2px);
+        }
+    
+    #st{
+        background-color:#01A111;
+        border:none;
+        box-shadow: 0 0 12px #ddf;
+        border-color:#1ee;
+        font-weight:bold;
+        outline:none;
+        border-radius:3px;
+    }
+    </style>
+</head>
+<body dir="auto">
+
+<div class="d-flex justify-content-between align-items-center p-3" dir="rtl">
+    <div>
+        <button class="btn btn-secondary btn-3d" onclick="toggleMode()">تبديل الوضع</button>
+        <button class="btn btn-secondary btn-3d" onclick="toggleLanguage()">تبديل اللغة</button>
+    </div>
+    <div class="server-section" dir="auto">
+        <select id="serverSelect" class="form-select" onchange="updateServer()">
+            <option value="default id=" id="select">اختر الخادم</option>
+            <option value="server1">خادم 1</option>
+            <option value="server2">خادم 2</option>
+            <option value="server3">خادم 3</option>
+            <option value="server4">خادم 4</option>
+            <option value="server5">خادم 5</option>
+            <option value="server6">خادم 6</option>
+            <option value="server7">خادم 7</option>
+            <option value="server8">خادم 8</option>
+            <option value="server9">خادم 9</option>
+            <option value="server10">خادم 10</option>
+            <option value="server11">خادم 11</option>
+        </select>
+        <button id="st" class="btn btn-secondary" onclick="startTest()">ابدأ الاختبار</button>
+    </div>
+</div>
+    <div id="alerts-container" class="mt- position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050; width: 90%; max-width: 600px;" dir="auto"></div>
+    
+    
+    
+<div class="container" style="margin-top:15px;" dir="auto">
+    <h2 class="text-center" id="title">اختبار سرعة الإنترنت</h2>
+    <p class="text-center" id="instruction">قم ببدء الاختبار لقياس سرعة الإنترنت الخاصة بك</p>
+
+    <section id="test-section" style="display: none;" dir="rtl">
+        <div class="text-center" dir="rtl">
+            <div>
+                <i class="fas fa-tachometer-alt icon" dir="rtl"></i>
+                <p id="download-speed" class="result" dir="rtl">سرعة التحميل: جاري القياس...</p>
+            </div>
+            <div>
+                <i class="fas fa-upload icon"></i>
+                <p id="upload-speed" class="result" dir="rtl">سرعة الرفع: جاري القياس...</p>
+            </div>
+            <div>
+                <i class="fas fa-sync-alt icon"></i>
+                <p id="ping-speed" class="result" dir="rtl">Ping: جاري القياس...</p>
+            </div>
+            <div>
+                <i class="fas fa-clock icon"></i>
+                <p id="test-time" class="result" dir="rtl">الوقت المستغرق: جاري القياس...</p>
+            </div>
+            
+            <div class="separator" dir="auto"></div>
+            
+            <div id="network-details" class="alert alert-info alert-custom" style="display: none;" dir="rtl">
+                <strong dir="rtl">تفاصيل الشبكة:</strong>
+                <p id="ip-address" dir="auto">عنوان IP: جاري القياس...</p>
+                <p dir="rtl" id="connection-type">نوع الاتصال: جاري القياس...</p>
+                <p dir="rtl" id="service-provider" dir="rtl">مزود الخدمة: جاري القياس...</p>
+            </div>
+
+            <div class="mt-3" dir="rtl">
+                <button class="btn btn-3d" onclick="downloadReport()" style="border-radius:5px; border-color:2px solid #ddd; background-color:#34A851;
+                     ">تحميل التقرير</button>
+                <button class="btn btn-3d mt-2" onclick="copyResults()" style="border-radius:5px; border-color:2px solid #ddd; margin:15px; background:#023074;
+                     ">نسخ النتائج</button>
+            </div>
+        </div>
+    </section>
+</div>
+    
+    <footer style="width:auto; 
+        text-align:center;
+        display:center; 
+        border-color:#FFC401; 
+        background-color:#212121;
+        padding:5px;
+        margin:-8px;
+        border:none;">
+        <p style="unset:all ; color:#ddd; background-color:#2B3130; tetx-align:center; ;font-size:15px; margin-left:10px; padding:8px;"><b><span style="color:#FC8500;"><a style="color:#FC8600; display:center; text-decoration:none;" href="https://wa.me/+966538886324" target="_blank">
+            Mohammed Alaa</a>
+            
+        </span>    للمطور 
+            <span style="Color:#FC8005;">Faster </span>جميع الحقوق محفوظة لموقع &copy;</p>
+    </footer>    
+
+<script>
+    let isDarkMode = false;
+let language = "ar";
+
+// وظيفة لتبديل الوضع بين الوضع الداكن والفاتح
+function toggleMode() {
+    isDarkMode = !isDarkMode;
+    if (isDarkMode) {
+        document.body.classList.add("dark-mode");
+    } else {
+        document.body.classList.remove("dark-mode");
+    }
+}
+
+// وظيفة لتبديل اللغة بين العربية والإنجليزية
+function toggleLanguage() {
+    if (language === "ar") {
+        language = "en";
+        document.getElementById("title").innerText = "Internet Speed Test";
+																		document.getElementById("st").innerText = "Start Test";        
+        document.getElementById("instruction").innerText = "Start the test to measure your internet speed";
+        document.getElementById("select").innerText="Select Server";
+    } else {
+        language = "ar";
+        document.getElementById("title").innerText = "اختبار سرعة الإنترنت";
+        document.getElementById("st").innerText = "ابدأ الاختبار";
+        document.getElementById("instruction").innerText = "قم ببدء الاختبار لقياس سرعة الإنترنت الخاصة بك";
+        document.getElementById("select").innerText="اختر الخادم";
+        
+    }
+}
+
+// وظيفة لعرض الرسائل التوضيحية
+function showAlert(message, type) {
+    const alertDiv = document.createElement("div");
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.role = "alert";
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    document.getElementById("alerts-container").appendChild(alertDiv);
+
+    // إزالة التنبيه تلقائيًا بعد 5 ثوانٍ
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+// وظيفة لبدء الاختبار
+function startTest() {
+    showAlert("تم بدء اختبار السرعة، يرجى الانتظار...", "info");
+    document.getElementById("test-section").style.display = "block";
+    const startTime = Date.now();
+
+    // محاكاة اختبار السرعة مع تأخير
+    setTimeout(() => {
+        const downloadSpeed = Math.random() * 100;  // سرعة التحميل
+        const uploadSpeed = Math.random() * 50;    // سرعة الرفع
+        const pingSpeed = Math.floor(Math.random() * 100);  // سرعة الـ ping
+        const endTime = Date.now();
+        const timeTaken = (endTime - startTime) / 1000;  // الوقت المستغرق بالثواني
+
+        // تحديث النتائج على الصفحة
+        document.getElementById("download-speed").innerText = `سرعة التحميل: ${downloadSpeed.toFixed(2)} Mbps`;
+        document.getElementById("upload-speed").innerText = `سرعة الرفع: ${uploadSpeed.toFixed(2)} Mbps`;
+        document.getElementById("ping-speed").innerText = `Ping: ${pingSpeed} ms`;
+        document.getElementById("test-time").innerText = `الوقت المستغرق: ${timeTaken.toFixed(2)} ثانية`;
+
+        // إظهار تفاصيل الشبكة
+        document.getElementById("network-details").style.display = "block";
+        document.getElementById("ip-address").innerText = `عنوان IP: ${getRandomIP()}`;
+        document.getElementById("connection-type").innerText = "نوع الاتصال: Wi-Fi";
+        document.getElementById("service-provider").innerText = "مزود الخدمة: شركة الاتصالات الافتراضية";
+
+        showAlert("تم الانتهاء من اختبار السرعة بنجاح!", "success");
+    }, 3000);  // محاكاة الاختبار لمدة 3 ثواني
+}
+
+// وظيفة لتوليد عنوان IP عشوائي
+function getRandomIP() {
+    return `192.168.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`;
+}
+
+// وظيفة لتحميل التقرير
+function downloadReport() {
+    const downloadSpeed = document.getElementById("download-speed").innerText;
+    const uploadSpeed = document.getElementById("upload-speed").innerText;
+    const pingSpeed = document.getElementById("ping-speed").innerText;
+    const testTime = document.getElementById("test-time").innerText;
+
+    const report = `اختبار سرعة الإنترنت
+سرعة التحميل: ${downloadSpeed}
+سرعة الرفع: ${uploadSpeed}
+Ping: ${pingSpeed}
+الوقت المستغرق: ${testTime}`;
+
+    // إنشاء ملف تقرير بصيغة .txt
+    const blob = new Blob([report], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'speed_test_report.txt';
+    link.click();
+
+    showAlert("تم تحميل التقرير بنجاح!", "success");
+}
+
+// وظيفة لنسخ النتائج إلى الحافظة
+function copyResults() {
+    const results = `
+اختبار سرعة الإنترنت
+سرعة التحميل: ${document.getElementById("download-speed").innerText}
+سرعة الرفع: ${document.getElementById("upload-speed").innerText}
+Ping: ${document.getElementById("ping-speed").innerText}
+الوقت المستغرق: ${document.getElementById("test-time").innerText}
+`;
+    navigator.clipboard.writeText(results).then(() => {
+        showAlert("تم نسخ النتائج إلى الحافظة!", "success");
+    }).catch((error) => {
+        showAlert("حدث خطأ أثناء نسخ النتائج!", "danger");
+        console.error("خطأ في نسخ النتائج: ", error);
+    });
+}
+
+// وظيفة لتحديث الخادم المختار
+function updateServer() {
+    const server = document.getElementById("serverSelect").value;
+    if (server !== "default") {
+        showAlert(`تم اختيار الخادم: ${server}`, "info");
+    }
+}
+    
+    
+    // وظيفة لعرض التنبيهات
+function showAlert(message, type = 'info') {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show text-center`;
+    alert.role = 'alert';
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+
+    const container = document.getElementById('alerts-container');
+    container.appendChild(alert);
+
+    // إزالة التنبيه بعد 5 ثوانٍ
+    setTimeout(() => {
+        alert.classList.remove('show'); // تأثير الإخفاء التدريجي
+        setTimeout(() => {
+            alert.remove(); // إزالة العنصر
+        }, 150);
+    }, 5000);
+}
+
+// خطوات الفحص مع الرسائل
+function startScan() {
+    // رسالة عند بدء الفحص
+    showAlert('تم بدء عملية الفحص. الرجاء الانتظار...', 'info');
+
+    // محاكاة خطوات الفحص
+    setTimeout(() => {
+        showAlert('جارٍ فحص الخادم...', 'warning');
+    }, 1000);
+
+    setTimeout(() => {
+        showAlert('تم فحص الخادم بنجاح!', 'success');
+    }, 3000);
+
+    setTimeout(() => {
+        showAlert('جارٍ تحليل البيانات...', 'info');
+    }, 4000);
+
+    setTimeout(() => {
+        showAlert('تم الانتهاء من عملية الفحص! عرض النتائج جاهز.', 'success');
+    }, 6000);
+}
+
+// استدعاء وظيفة الفحص عند الضغط على زر
+document.getElementById('start-scan-btn').addEventListener('click', startScan);
+</script>
+    
+</html>
